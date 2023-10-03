@@ -11,7 +11,7 @@ class Menu extends Phaser.Scene
     preload()
     {
         // load audio files
-        this.load.audio("sfx_select", "./Assets/blip_select12.wav");
+//        this.load.audio("sfx_select", "./Assets/blip_select12.wav"); //Need to find sound smh
         this.load.audio("menuMusic", "./Assets/music/mainmenu.mp3");
         this.load.image("background", "./Assets/juice.jpg")
     }
@@ -50,7 +50,7 @@ class Menu extends Phaser.Scene
         this.add.text
         (
             centerX, // x-coord
-            centerY - textSpacer, // y-coord
+            10 + textSpacer, // y-coord
             "Juice Box :)", // initial text to be displayed
             menuConfig // configuration object
         ).setOrigin(0.5);
@@ -145,7 +145,72 @@ class Menu extends Phaser.Scene
         this.backButton.on('pointerdown', () => {
             this.back();
         });
-    
+
+        // Credits :)
+        this.creditJustin = this.add.text
+        (
+            centerX - 100, // x-coord
+            250 - textSpacer, // y-coord
+            "Justin", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
+
+        this.creditKen = this.add.text
+        (
+            centerX + 100, // x-coord
+            250 - textSpacer, // y-coord
+            "Ken", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
+        
+        this.creditNoah = this.add.text
+        (
+            centerX - 100, // x-coord
+            300 - textSpacer, // y-coord
+            "Noah", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
+
+        this.creditThomas = this.add.text
+        (
+            centerX + 100, // x-coord
+            300 - textSpacer, // y-coord
+            "Thomas", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
+        
+        this.creditJin = this.add.text
+        (
+            centerX - 100, // x-coord
+            350 - textSpacer, // y-coord
+            "Jin", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
+
+        this.creditMars = this.add.text
+        (
+            centerX + 100, // x-coord
+            350 - textSpacer, // y-coord
+            "Mars", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
+
+        this.creditAndrew = this.add.text
+        (
+            centerX - 100, // x-coord
+            400 - textSpacer, // y-coord
+            "Andrew", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
+
+        this.creditTy = this.add.text
+        (
+            centerX + 100, // x-coord
+            400 - textSpacer, // y-coord
+            "Ty", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
+
         // define input keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
@@ -193,14 +258,39 @@ class Menu extends Phaser.Scene
         this.creditsButton.setAlpha(1).setInteractive();
         this.settingsButton.setAlpha(1).setInteractive();
         // Disable EVERYTHING ELSE
+        // Disable Settings
         this.musVolSlider.setAlpha(0).disableInteractive();
         this.brightSliderTrack.setAlpha(0).disableInteractive();
         this.musVolHandle.setAlpha(0).disableInteractive();
         this.brightHandle.setAlpha(0).disableInteractive();
         this.backButton.setAlpha(0).disableInteractive();
+        // Disable credits
+        this.creditJustin.setAlpha(0);
+        this.creditJin.setAlpha(0);
+        this.creditAndrew.setAlpha(0);
+        this.creditKen.setAlpha(0);
+        this.creditMars.setAlpha(0);
+        this.creditNoah.setAlpha(0);
+        this.creditThomas.setAlpha(0);
+        this.creditTy.setAlpha(0);
     }
 
     credits(){   
+        //Disable Main Menu Buttons
+        this.startButton.setAlpha(0).disableInteractive();
+        this.creditsButton.setAlpha(0).disableInteractive();
+        this.settingsButton.setAlpha(0).disableInteractive();
+        // Enable Credits Buttons        
+        this.creditJustin.setAlpha(1);
+        this.creditJin.setAlpha(1);
+        this.creditAndrew.setAlpha(1);
+        this.creditKen.setAlpha(1);
+        this.creditMars.setAlpha(1);
+        this.creditNoah.setAlpha(1);
+        this.creditThomas.setAlpha(1);
+        this.creditTy.setAlpha(1);
+
+        this.backButton.setAlpha(1).setInteractive();
         
     }
     // UPDATE

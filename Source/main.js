@@ -18,12 +18,10 @@ let borderPadding = borderUISize / 3;
 // define the game settings, initially set for easy mode
 game.settings =
 {
+    musicVolume: 1,
+    sfxVolume: 1,
+    brightness: 0,
     playerSpeed: 5,
-    fastzombieSpeed: 4,
-    gameTimer: 6000,
-    gasTimer: 0,
-    gas: 8,
-    apm: 'pm',
 };
 
 // reserve some keyboard bindings

@@ -3,13 +3,6 @@ class Player extends Phaser.GameObjects.Sprite
     constructor(scene, x, y, texture, frame)
     {
         super(scene, x, y, texture, frame);
-
-        // add object to existing scene
-        scene.add.existing(this);
-
-        // track the rockets firing status
-        this.isFiring = false;
-        this.moveSpeed = 10; 
     }
 
 
@@ -25,8 +18,6 @@ class Player extends Phaser.GameObjects.Sprite
     // reset player 
     reset()
     {
-        this.isFiring = false;
-        this.y = game.config.height/1.45;
     }
 }
 
