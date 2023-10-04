@@ -20,7 +20,6 @@ game.settings =
 {
     musicVolume: 1,
     sfxVolume: 1,
-    brightness: 0,
     playerSpeed: 5,
 };
 

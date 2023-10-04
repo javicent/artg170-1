@@ -28,7 +28,7 @@ class Menu extends Phaser.Scene
         // menu music plays
         this.menuMusic = this.sound.add("menuMusic", { loop: true }); // "loop: true" will loop the music
         this.menuMusic.play();
-        
+        this.menuMusic.setVolume(game.settings.musicVolume)
         // menu display configuration
         let menuConfig =
         {
@@ -82,48 +82,58 @@ class Menu extends Phaser.Scene
     
         // Settings Sliders
         // Music Volume
-        this.musVolSlider = this.add.rectangle(centerX, centerY, 300, 10, 0x666666).setAlpha(0).disableInteractive();
-        this.musVolHandle = this.add.sprite(centerX, centerY, "handleImage").setAlpha(0).disableInteractive(); // Replace with your handle image
-        this.musVolHandle.setInteractive({ draggable: true });
-        this.musVolHandle.on("drag", (pointer, dragX) => {
-        // Constrain the handle's position within the slider track
+        const initialValue = game.settings.musicVolume;
         const minX = centerX - 150;
         const maxX = centerX + 150;
-        const newY = this.musVolHandle.y; // Maintain the current Y position
-        const newX = Phaser.Math.Clamp(dragX, minX, maxX);
-        this.musVolHandle.setPosition(newX, newY);
-        // Calculate and update the value based on the handle's position
-        const value = (newX - minX) / (maxX - minX); // Normalize to a value between 0 and 1
-        // Use the value as needed (adjust volume)
-        const volume = value; // Use the normalized value directly for volume
-        console.log("Volume Value:", volume);
-        // Update the volume of the music
-        this.menuMusic.setVolume(volume);
-        });
-    
-    
-        // Brightness Slider
-        this.brightSliderTrack = this.add.rectangle(centerX, centerY + 100, 300, 10, 0x666666).setAlpha(0).disableInteractive();
-        this.brightHandle = this.add.sprite(centerX, centerY + 100, "handleImage").setAlpha(0).disableInteractive(); // Replace with your handle image
-        this.brightHandle.setInteractive({ draggable: true });
-        this.brightHandle.on("drag", (pointer, dragX) => {
+
+        const initialX = minX + initialValue * (maxX - minX);
+
+        this.musVolSlider = this.add.rectangle(centerX, centerY, 300, 10, 0x666666);
+        this.musVolSlider.setAlpha(0).disableInteractive();
+
+        // Create the handle at the initial position
+        this.musVolHandle = this.add.sprite(initialX, centerY, "handleImage").setAlpha(0).disableInteractive(); // Replace with your handle image
+        // Handle drag event
+        this.musVolHandle.on("drag", (pointer, dragX) => {
             // Constrain the handle's position within the slider track
-            const minX = centerX - 150;
-            const maxX = centerX + 150;
-            const newY = this.brightHandle.y; // Maintain the current Y position
             const newX = Phaser.Math.Clamp(dragX, minX, maxX);
-            this.brightHandle.setPosition(newX, newY);
+            this.musVolHandle.setPosition(newX, centerY);
+
             // Calculate and update the value based on the handle's position
             const value = (newX - minX) / (maxX - minX); // Normalize to a value between 0 and 1
-            // Use the value as needed (e.g., adjust brightness, contrast, etc.)
-            console.log("Brightness Slider Value:", value);
+            //console.log("Volume Value:", value);
+
+            // Update the volume of the music
+            this.menuMusic.setVolume(value);
+            game.settings.musicVolume = value;
         });
     
-        // Add an event listener to capture the slider value
-        this.brightSliderTrack.on("valuechange", (newValue) => {
-            // Handle brightness value change here
-            console.log("Brightness Slider Value:", newValue);
+        // SFX Volume
+        const sfxInitVal = game.settings.sfxVolume;
+        const sfxMinX = centerX - 150;
+        const sfxMaxX = centerX + 150;
+
+        const sfxInitX = minX + sfxInitVal * (maxX - minX);
+
+        this.sfxSliderTrack = this.add.rectangle(centerX, centerY - 100, 300, 10, 0x666666);
+        this.sfxSliderTrack.setAlpha(0).disableInteractive();
+
+        // Create the handle at the initial position
+        this.sfxHandle = this.add.sprite(sfxMinX, centerY - 100, "handleImage").setAlpha(0).disableInteractive(); // Replace with your handle image
+        // Handle drag event
+        this.sfxHandle.on("drag", (pointer, dragX) => {
+            // Constrain the handle's position within the slider track
+            const newX = Phaser.Math.Clamp(dragX, minX, maxX);
+            this.sfxHandle.setPosition(newX, centerY - 100);
+
+            // Calculate and update the value based on the handle's position
+            const sfxValue = (newX - minX) / (maxX - minX); // Normalize to a value between 0 and 1
+            console.log("Brightness Value:", sfxValue);
+            game.settings.sfxVolume = sfxValue;
+
+            // Update the volume of the music
         });
+
     
         // Main Menu Button Actions
         // Start
@@ -244,10 +254,9 @@ class Menu extends Phaser.Scene
         this.settingsButton.setAlpha(0).disableInteractive();
         // Enable Settings Sliders/Buttons
         this.musVolSlider.setAlpha(1).setInteractive();
-        this.brightSliderTrack.setAlpha(1).setInteractive();
-        this.musVolHandle.setAlpha(1).setInteractive();
-        this.brightHandle.setAlpha(1).setInteractive();
-
+        this.sfxSliderTrack.setAlpha(1).setInteractive();
+        this.musVolHandle.setAlpha(1).setInteractive({ draggable: true });
+        this.sfxHandle.setAlpha(1).setInteractive({ draggable: true });
         
         this.backButton.setAlpha(1).setInteractive();
     }
@@ -280,6 +289,7 @@ class Menu extends Phaser.Scene
         this.startButton.setAlpha(0).disableInteractive();
         this.creditsButton.setAlpha(0).disableInteractive();
         this.settingsButton.setAlpha(0).disableInteractive();
+
         // Enable Credits Buttons        
         this.creditJustin.setAlpha(1);
         this.creditJin.setAlpha(1);
@@ -290,13 +300,13 @@ class Menu extends Phaser.Scene
         this.creditThomas.setAlpha(1);
         this.creditTy.setAlpha(1);
 
-        this.backButton.setAlpha(1).setInteractive();
-        
+        this.backButton.setAlpha(1).setInteractive();        
     }
     // UPDATE
     //--------------------------------------------------------------------------
     update()
     {
+        console.log(game.settings.sfxVolume);
     }
 }
 //-end update()-----------------------------------------------------------------
