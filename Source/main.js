@@ -20,7 +20,6 @@ game.settings =
 {
     musicVolume: 1,
     sfxVolume: 1,
-    playerSpeed: 5,
 };
 
 // reserve some keyboard bindings

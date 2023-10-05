@@ -11,7 +11,7 @@ class Menu extends Phaser.Scene
     preload()
     {
         // load audio files
-//        this.load.audio("sfx_select", "./Assets/blip_select12.wav"); //Need to find sound smh
+        this.load.audio("sfx_select", "./Assets/sounds/sfxSelect.wav"); //Need to find sound smh
         this.load.audio("menuMusic", "./Assets/music/mainmenu.mp3");
         this.load.image("background", "./Assets/juice.jpg")
     }
@@ -36,7 +36,7 @@ class Menu extends Phaser.Scene
             fontSize: "28px",
             backgroundColor: "#f3b141",
             color: "#843605",
-            align: "right",
+            align: "center",
             padding: {top: 5, bottom: 5},
             fixedWidth: 0
         };
@@ -80,61 +80,74 @@ class Menu extends Phaser.Scene
         .disableInteractive()
         .setAlpha(0);
     
-        // Settings Sliders
+        // Settings Sliders    
         // Music Volume
-        const initialValue = game.settings.musicVolume;
-        const minX = centerX - 150;
-        const maxX = centerX + 150;
+        const musXSpacer = -50;
+        const musInitVal = game.settings.musicVolume;
+        const musMinX = centerX - 150 + musXSpacer;
+        const musMaxX = centerX + 150 + musXSpacer;
 
-        const initialX = minX + initialValue * (maxX - minX);
+        const musInitX = musMinX + musInitVal * (musMaxX - musMinX);
 
-        this.musVolSlider = this.add.rectangle(centerX, centerY, 300, 10, 0x666666);
+        this.musVolSlider = this.add.rectangle(centerX + musXSpacer, centerY - 100, 300, 10, 0x666666);
         this.musVolSlider.setAlpha(0).disableInteractive();
 
         // Create the handle at the initial position
-        this.musVolHandle = this.add.sprite(initialX, centerY, "handleImage").setAlpha(0).disableInteractive(); // Replace with your handle image
+        this.musVolHandle = this.add.rectangle(musInitX, centerY - 100, 25, 50, 0x00ff00).setAlpha(0).disableInteractive(); // Replace with your handle image
         // Handle drag event
         this.musVolHandle.on("drag", (pointer, dragX) => {
             // Constrain the handle's position within the slider track
-            const newX = Phaser.Math.Clamp(dragX, minX, maxX);
-            this.musVolHandle.setPosition(newX, centerY);
+            const musNewX = Phaser.Math.Clamp(dragX, musMinX, musMaxX);
+            this.musVolHandle.setPosition(musNewX, centerY - 100);
 
             // Calculate and update the value based on the handle's position
-            const value = (newX - minX) / (maxX - minX); // Normalize to a value between 0 and 1
-            //console.log("Volume Value:", value);
+            const musValue = (musNewX - musMinX) / (musMaxX - musMinX); // Normalize to a value between 0 and 1
 
             // Update the volume of the music
-            this.menuMusic.setVolume(value);
-            game.settings.musicVolume = value;
+            this.menuMusic.setVolume(musValue);
+            game.settings.musicVolume = musValue;
         });
-    
+        this.musVol = this.add.text
+        (
+            musMinX - 60, // x-coord
+            centerY - 100, // y-coord
+            "Music\nVolume:", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);        
         // SFX Volume
+        const sfxXSpacer = -50;
         const sfxInitVal = game.settings.sfxVolume;
-        const sfxMinX = centerX - 150;
-        const sfxMaxX = centerX + 150;
+        const sfxMinX = centerX - 150 + sfxXSpacer;
+        const sfxMaxX = centerX + 150 + sfxXSpacer;
 
-        const sfxInitX = minX + sfxInitVal * (maxX - minX);
+        const sfxInitX = sfxMinX + sfxInitVal * (sfxMaxX - sfxMinX);
 
-        this.sfxSliderTrack = this.add.rectangle(centerX, centerY - 100, 300, 10, 0x666666);
-        this.sfxSliderTrack.setAlpha(0).disableInteractive();
+        this.sfxVolSlider = this.add.rectangle(centerX + sfxXSpacer, centerY, 300, 10, 0x666666);
+        this.sfxVolSlider.setAlpha(0).disableInteractive();
 
-        // Create the handle at the initial position
-        this.sfxHandle = this.add.sprite(sfxMinX, centerY - 100, "handleImage").setAlpha(0).disableInteractive(); // Replace with your handle image
+        this.sfxVolHandle = this.add.rectangle(sfxInitX, centerY,  25, 50, 0x00ff00).setAlpha(0).disableInteractive(); // Replace with your handle image
         // Handle drag event
-        this.sfxHandle.on("drag", (pointer, dragX) => {
+        this.sfxVolHandle.on("drag", (pointer, dragX) => {
             // Constrain the handle's position within the slider track
-            const newX = Phaser.Math.Clamp(dragX, minX, maxX);
-            this.sfxHandle.setPosition(newX, centerY - 100);
+            const sfxNewX = Phaser.Math.Clamp(dragX, sfxMinX, sfxMaxX);
+            this.sfxVolHandle.setPosition(sfxNewX, centerY);
 
             // Calculate and update the value based on the handle's position
-            const sfxValue = (newX - minX) / (maxX - minX); // Normalize to a value between 0 and 1
-            console.log("Brightness Value:", sfxValue);
-            game.settings.sfxVolume = sfxValue;
+            const value = (sfxNewX - sfxMinX) / (sfxMaxX - sfxMinX); // Normalize to a value between 0 and 1
 
             // Update the volume of the music
+            //this.menuMusic.setVolume(value); //replace with sfx music
+            game.settings.sfxVolume = value;
         });
+        this.sfxVol = this.add.text
+        (
+            sfxMinX - 60, // x-coord
+            centerY, // y-coord
+            "SFX\nVolume:", // initial text to be displayed
+            menuConfig // configuration object
+        ).setOrigin(0.5).setAlpha(0);
 
-    
+
         // Main Menu Button Actions
         // Start
         this.startButton.on('pointerdown', () => {
@@ -227,15 +240,6 @@ class Menu extends Phaser.Scene
 
     startGame() {
         // Configuration settings for the game
-        game.settings = {
-            playerSpeed: 4,
-            fastzombieSpeed: 4,
-            gameTimer: 1320000,
-            gasTimer: 0,
-            gas: 8,
-            apm: 'pm',
-        };
-    
         this.sound.play("sfx_select");
     
         // Stop the menu music (if any)
@@ -254,10 +258,12 @@ class Menu extends Phaser.Scene
         this.settingsButton.setAlpha(0).disableInteractive();
         // Enable Settings Sliders/Buttons
         this.musVolSlider.setAlpha(1).setInteractive();
-        this.sfxSliderTrack.setAlpha(1).setInteractive();
-        this.musVolHandle.setAlpha(1).setInteractive({ draggable: true });
-        this.sfxHandle.setAlpha(1).setInteractive({ draggable: true });
-        
+        this.musVolHandle.setAlpha(1).setInteractive({ draggable: true });        
+        this.musVol.setAlpha(1).setInteractive();
+        this.sfxVolSlider.setAlpha(1).setInteractive();
+        this.sfxVolHandle.setAlpha(1).setInteractive({ draggable: true });
+        this.sfxVol.setAlpha(1).setInteractive();
+
         this.backButton.setAlpha(1).setInteractive();
     }
 
@@ -269,9 +275,11 @@ class Menu extends Phaser.Scene
         // Disable EVERYTHING ELSE
         // Disable Settings
         this.musVolSlider.setAlpha(0).disableInteractive();
-        this.brightSliderTrack.setAlpha(0).disableInteractive();
+        this.sfxVolSlider.setAlpha(0).disableInteractive();
         this.musVolHandle.setAlpha(0).disableInteractive();
-        this.brightHandle.setAlpha(0).disableInteractive();
+        this.sfxVolHandle.setAlpha(0).disableInteractive();
+        this.musVol.setAlpha(0).disableInteractive();
+        this.sfxVol.setAlpha(0).disableInteractive();
         this.backButton.setAlpha(0).disableInteractive();
         // Disable credits
         this.creditJustin.setAlpha(0);
@@ -306,7 +314,6 @@ class Menu extends Phaser.Scene
     //--------------------------------------------------------------------------
     update()
     {
-        console.log(game.settings.sfxVolume);
     }
 }
 //-end update()-----------------------------------------------------------------
